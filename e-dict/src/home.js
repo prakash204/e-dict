@@ -8,7 +8,7 @@ class Home extends Component {
             word : ""
         }
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     /*componentDidMount() {
