@@ -1,14 +1,22 @@
 import {Component} from 'react';
 import Keyboard from 'react-simple-keyboard';
 import "react-simple-keyboard/build/css/index.css";
+import W from './words.json';
+
+const Words = W.Words; 
 
 class Home extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            word : "",
-            input : "",
+            input: "",
+            audio : null,
+            audio_is_playing : null,
+            audio_path:"",
+            word_found:null,
+            sentences:[],
+            want_keyboard : null,
             layoutName: "default",
             display : {
                 'a': '\u2714:Validate (Shift+Enter)', // check mark - same action as accept
@@ -57,21 +65,24 @@ class Home extends Component {
                 ]
             }
         }
-        this.handleChange = this.handleChange.bind(this);
+        this.searchword= this.searchword.bind(this);
+        this.togglevirtualkeyboard= this.togglevirtualkeyboard.bind(this);
+        this.onChangeInput= this.onChangeInput.bind(this);
+        this.resettextbox= this.resettextbox.bind(this);
+        this.playpauseaudio= this.playpauseaudio.bind(this);
+        this.stopaudio= this.stopaudio.bind(this);
+        //this.handleChange = this.handleChange.bind(this);
         //hdhjthis.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    /*componentDidMount() {
-        this.setState({field1:''});
+    componentDidMount() {
+        this.setState({"input":"","want_keyboard":false,"found":false,"audio_is_playing":false});
     }
-    handleSubmit(event) {
-        this.setState({'field1': event.target.elements.word.value});
-    }*/
 
-    onChange = input => {
-        this.setState({ input });
-        console.log("Input changed", input);
-      };
+    onChange = word => {
+        this.setState({ "input":word });
+        console.log("word changed", word);
+    };
     
     onKeyPress = button => {
     console.log("Button pressed", button);
@@ -85,8 +96,10 @@ class Home extends Component {
 
     onChangeInput = event => {
         const input = event.target.value;
-        this.setState({ input });
-        this.keyboard.setInput(input);
+        const want_keyboard = this.state.want_keyboard;
+        console.log(input);
+        this.setState({ "input":input });
+        if (want_keyboard) this.keyboard.setInput(input);
     };
 
     handleShift = () => {
@@ -97,13 +110,75 @@ class Home extends Component {
         });
       };
 
-    handleChange(event) {
-        this.setState({word:event.target.value});
+    searchword() {
+        var flag = false;
+        var i;
+        const keyword = this.state.input;
+        console.log(keyword);
+        for (i in Words){
+            if (Words[i]['word'] === keyword) {
+                this.setState({
+                    "word_found":true,
+                    "audio_path":Words[i].audio,
+                    "sentences":Words[i].sentences,
+                    "audio":new Audio(Words[i].audio),
+                    "audio_is_playing":false
+                });
+                flag = true;
+                break;
+            }
+        }
+        if (flag === false) {
+            this.setState({"word_found":false});
+        }
+        console.log(flag);
+
     }
 
-    handleSubmit() {
-        //need to do
-        console.log('ahah')
+    resettextbox() {
+        this.setState({"input":"","audio_path":"","sentences":[],"word_found":false});
+    }
+
+    togglevirtualkeyboard(){
+        var flag = this.state.want_keyboard;
+        if (flag === true) {
+            flag = false;
+        } else {
+            flag = true;
+        }
+        this.setState({"want_keyboard":flag});
+    }
+    
+    playpauseaudio () {
+        const flag = this.state.audio_is_playing;
+        if (!flag) {
+            this.state.audio.play();
+            console.log("playing");
+        } else {
+            this.state.audio.pause();
+            console.log("paused");
+        }
+        this.setState({"audio_is_playing":!flag});
+    }
+
+    stopaudio () {
+        this.state.audio.load();
+        this.setState({"audio_is_playing":false});
+    }
+
+    displaySentences() {
+        const sentences = this.state.sentences;
+        return (
+            <>
+            <button onClick={this.playpauseaudio} > {this.state.audio_is_playing === true ? "Pause" : "Play"} </button>
+            <button onClick={this.stopaudio} > Stop </button>
+            <ul>
+            {sentences.map((item) => (
+                <li> {item} </li>
+            ))}
+            </ul>
+            </>
+        )
     }
 
     render() {
@@ -111,20 +186,35 @@ class Home extends Component {
             <div>
                 
                 { this.state.input !== ""  ? <h1>{this.state.input}</h1> : "" }
-                <input
-                    value={this.state.input}
-                    placeholder={"Tap on the virtual keyboard to start"}
-                    onChange={this.onChangeInput}
-                />
-                <Keyboard
-                    keyboardRef={r => (this.keyboard = r)}
-                    layout={this.state.layout}
-                    layoutName={this.state.layoutName}
-                    display={this.state.display}
-                    onChange={this.onChange}
-                    disableButtonHold = "false"
-                    onKeyPress={this.onKeyPress}
-                />
+                {this.state.want_keyboard === true ? 
+                <div>
+                    <input
+                        value={this.state.input}
+                        placeholder={"Tap on the virtual keyboard to start"}
+                        onChange={this.onChangeInput}
+                    />
+                    <Keyboard
+                        keyboardRef={r => (this.keyboard = r)}
+                        layout={this.state.layout}
+                        layoutName={this.state.layoutName}
+                        display={this.state.display}
+                        onChange={this.onChange}
+                        disableButtonHold = "false"
+                        onKeyPress={this.onKeyPress}
+                    />
+                    <button type="button" onClick={this.togglevirtualkeyboard}>Close Keyboard</button>
+                    </div>
+
+                    : <>
+                        <input type="text" placeholder="enter a word" value={this.state.input} onChange={this.onChangeInput}></input>
+                        <button type="button" onClick={this.togglevirtualkeyboard}>View Keyboard</button>
+                        </>
+                    }
+                <button type="button" onClick={this.searchword}>Search</button>
+                <button type="button" onClick={this.resettextbox}>Reset</button>
+                
+                {this.state.word_found === true ? this.displaySentences() : "" }
+
             </div>
         )
     }
