@@ -17,6 +17,7 @@ class Home extends Component {
             audio : null,
             audio_is_playing : null,
             audio_path:"",
+            image_path:"",
             word_found:null,
             sentences:[],
             want_keyboard : null,
@@ -125,7 +126,8 @@ class Home extends Component {
                     "audio_path":Words[i].audio,
                     "sentences":Words[i].sentences,
                     "audio":new Audio(Words[i].audio),
-                    "audio_is_playing":false
+                    "audio_is_playing":false,
+                    "image_path" : Words[i].image
                 });
                 flag = true;
                 break;
@@ -173,6 +175,7 @@ class Home extends Component {
 
     displaySentences() {
         const sentences = this.state.sentences;
+        const image_path = this.state.image_path;
         return (
             <>
             <div class="matter-div">
@@ -182,7 +185,7 @@ class Home extends Component {
                     ))}
                 </div>
                 <div class="image-div">
-                        <img src={logo}/>
+                        <img src={image_path} alt="image for word"/>
                 </div>
             </div>
             <div>
@@ -248,11 +251,13 @@ class Home extends Component {
                         </>
                     }
                 <br></br>
+                <div>
                 <div class="wrap">
                 <a class="button" type="button"  onClick={this.searchword}>Search</a>
                 </div>
                 <div class="wrap">
                     <a class="button" type="button"  onClick={this.resettextbox}>Reset</a>
+                </div>
                 </div>
                 {this.state.word_found === true ? this.displaySentences() 
                 : this.state.word_found===null?" "
@@ -273,7 +278,7 @@ class Home extends Component {
 
                 <div class="watermark">
                     <span>Done by ________</span> <br/>
-                    <img src={logo}></img>
+                    <img src={logo} alt="nitk logo"/>
                 </div>
 
             </div>

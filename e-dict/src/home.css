@@ -145,7 +145,7 @@
   height: 3rem;
 }
 .watermark span{
-  color: rgba(0, 0, 0, 0.452);
+  color: rgb(2, 0, 131);
   font-family: monospace;
   font-size: smaller;
 }
