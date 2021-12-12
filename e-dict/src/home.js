@@ -2,6 +2,9 @@ import {Component} from 'react';
 import Keyboard from 'react-simple-keyboard';
 import "react-simple-keyboard/build/css/index.css";
 import W from './words.json';
+import './home.css';
+import {FaSearch} from 'react-icons/fa';
+import logo from './NITK_LOGO.svg';
 
 const Words = W.Words; 
 
@@ -91,7 +94,7 @@ class Home extends Component {
      * If you want to handle the shift and caps lock buttons
      */
     if (button === "{shift}" || button === "{lock}") this.handleShift();
-    else if (button === "{enter}") this.handleSubmit();
+    //else if (button === "{enter}") this.handleSubmit();
     };
 
     onChangeInput = event => {
@@ -131,12 +134,14 @@ class Home extends Component {
         if (flag === false) {
             this.setState({"word_found":false});
         }
+        else{
+            this.setState({"want_keyboard":false});
+        }
         console.log(flag);
-
     }
 
     resettextbox() {
-        this.setState({"input":"","audio_path":"","sentences":[],"word_found":false});
+        this.setState({"input":"","audio_path":"","sentences":[],"word_found":null});
     }
 
     togglevirtualkeyboard(){
@@ -170,29 +175,50 @@ class Home extends Component {
         const sentences = this.state.sentences;
         return (
             <>
-            <button onClick={this.playpauseaudio} > {this.state.audio_is_playing === true ? "Pause" : "Play"} </button>
-            <button onClick={this.stopaudio} > Stop </button>
-            <ul>
-            {sentences.map((item) => (
-                <li> {item} </li>
-            ))}
-            </ul>
+            <div class="matter-div">
+                <div class="sentence-div">
+                    {sentences.map((item) => (
+                        <div class="sentence">{item} </div>
+                    ))}
+                </div>
+                <div class="image-div">
+                        <img src={logo}/>
+                </div>
+            </div>
+            <div>
+                <div class="wrap">
+                    <a class="button"  onClick={this.playpauseaudio} > {this.state.audio_is_playing === true ? "Pause" : "Play"} </a>
+                </div>
+                <div class="wrap">
+                    <a class="button"  onClick={this.stopaudio} > Stop </a>
+                </div>
+            </div>
             </>
         )
     }
 
     render() {
         return(
-            <div>
+            <div class="container">
+                <header>
+                    <h1 class="logo">E- Dict</h1>
+                </header>
+                <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
                 
-                { this.state.input !== ""  ? <h1>{this.state.input}</h1> : "" }
+                { this.state.input !== ""  ? <h1>{this.state.input}</h1> : <h1 style={{color:"white"}}>_</h1> }
                 {this.state.want_keyboard === true ? 
                 <div>
+                    <div class="search-box">
                     <input
+                        class = "search-txt2"
                         value={this.state.input}
                         placeholder={"Tap on the virtual keyboard to start"}
                         onChange={this.onChangeInput}
                     />
+                        <button type="button" class="search-btn" onClick={this.searchword}>
+                                <FaSearch/>
+                        </button>
+                    </div>
                     <Keyboard
                         keyboardRef={r => (this.keyboard = r)}
                         layout={this.state.layout}
@@ -202,18 +228,53 @@ class Home extends Component {
                         disableButtonHold = "false"
                         onKeyPress={this.onKeyPress}
                     />
-                    <button type="button" onClick={this.togglevirtualkeyboard}>Close Keyboard</button>
+                        <div class="wrap">
+                            <a class="button" type="button"  onClick={this.togglevirtualkeyboard}>Close Keyboard</a>
+                        </div>
                     </div>
 
                     : <>
-                        <input type="text" placeholder="enter a word" value={this.state.input} onChange={this.onChangeInput}></input>
-                        <button type="button" onClick={this.togglevirtualkeyboard}>View Keyboard</button>
+                        <div class="search-box">
+                            <form onSubmit={this.searchword} action='#'>
+                                <input class="search-txt" type="text" placeholder="Enter a word" value={this.state.input} onChange={this.onChangeInput}></input>
+                            </form>
+                            <button type="button" class="search-btn" onClick={this.searchword}>
+                                <FaSearch/>
+                            </button>
+                        </div>
+                        <div class="wrap">
+                            <a class="button" type="button"  onClick={this.togglevirtualkeyboard}>View Keyboard</a>
+                        </div>
                         </>
                     }
-                <button type="button" onClick={this.searchword}>Search</button>
-                <button type="button" onClick={this.resettextbox}>Reset</button>
-                
-                {this.state.word_found === true ? this.displaySentences() : "" }
+                <br></br>
+                <div class="wrap">
+                <a class="button" type="button"  onClick={this.searchword}>Search</a>
+                </div>
+                <div class="wrap">
+                    <a class="button" type="button"  onClick={this.resettextbox}>Reset</a>
+                </div>
+                {this.state.word_found === true ? this.displaySentences() 
+                : this.state.word_found===null?" "
+                        : <>
+                        <div class="no-results">
+                            <div class="search-message-empty-container">
+                                <span class="search-message-empty-decal">
+                                    <span class="search-message-empty-decal-eyes">:</span>
+                                    <span>(</span>
+                                </span>
+                                <h2 class="search-message-empty-message">
+                                    Nope, word not found.
+                                </h2>
+                            </div>
+                        </div>
+                        </>
+                }
+
+                <div class="watermark">
+                    <span>Done by ________</span> <br/>
+                    <img src={logo}></img>
+                </div>
 
             </div>
         )
