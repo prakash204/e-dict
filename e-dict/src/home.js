@@ -7,6 +7,7 @@ import {FaSearch} from 'react-icons/fa';
 import logo from './NITK_LOGO.svg';
 import Speechinput from './speechinput.js';
 
+
 const Words = W.Words; 
 
 var recognition = new window.webkitSpeechRecognition();
@@ -82,6 +83,7 @@ class Home extends Component {
         this.playpauseaudio= this.playpauseaudio.bind(this);
         this.stopaudio= this.stopaudio.bind(this);
         this.startButton = this.startButton.bind(this);
+        this.inputtexttospeech = this.inputtexttospeech.bind(this);
         //this.handleChange = this.handleChange.bind(this);
         //hdhjthis.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -193,7 +195,12 @@ class Home extends Component {
             <div class="matter-div">
                 <div class="sentence-div">
                     {sentences.map((item) => (
-                        <div class="sentence">{item} </div>
+                        <div class="sentence">
+                            {item}
+                            <button type="button" id={item} onClick={(event) => this.texttospeech(event)}>
+                                <img src="./image/speaker.png" alt="speake"/>
+                            </button>
+                        </div>
                     ))}
                 </div>
                 <div class="image-div">
@@ -225,6 +232,15 @@ class Home extends Component {
             return;
         }
         recognition.start();
+    }
+
+    inputtexttospeech() {
+        window.responsiveVoice.speak(this.state.input, "Tamil Female", {pitch: 0.95, volume:25,rate:0.65});
+    }
+
+    texttospeech(event) {
+        let message = event.target.id;
+        window.responsiveVoice.speak(message, "Tamil Female", {pitch: 1, volume:25,rate:0.65});
     }
 
     render() {
@@ -259,7 +275,11 @@ class Home extends Component {
                 </header>
                 <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
                 
-                { this.state.input !== ""  ? <h1>{this.state.input}</h1> : <h1 style={{color:"white"}}>_</h1> }
+                { this.state.input !== ""  ? 
+                    <div>
+                        <h1>{this.state.input}</h1>
+                        <button type="button" onClick={this.inputtexttospeech}> Click to hear</button>
+                    </div> : <h1 style={{color:"white"}}>_</h1> }
                 
                 {this.state.want_keyboard === true ? 
                 <div>
@@ -330,6 +350,8 @@ class Home extends Component {
                         </>
                 }
 
+                <button type="button" onClick={this.texttospeech}>Loud</button>
+                
                 <div class="watermark">
                     <img src={logo} alt="nitk logo"/>
                     <span>Developed by Praneeth & Shashi Prakash,IT Dept., NITK</span>

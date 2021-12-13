@@ -127,22 +127,17 @@
 }
 
 .watermark {
-    position: fixed;
+    margin : 1rem;
     bottom: 1rem;
-    left: 1rem;
-    opacity: var(--watermarkOpacity, 0.3);
-    --watermarkOpacity: 0.8;
-    transition: var(--watermarkTransition, 0) ease-out;
-    --watermarkTransition: 0.3s;
     background-color: rgb(255 255 255 / 49%);
-    opacity: 1.0;
-    display: block;
+    display:block;
     flex-wrap: wrap;
 }
 
 .watermark img{
-  width: 10rem;
-  height: 10rem;
+  width: 5rem;
+  height: 5rem;
+  left: 1rem;
 }
 .watermark span{
   color: rgb(0, 0, 0);
@@ -238,4 +233,11 @@ header {
 
 .no-results{
   text-align: center;
+}
+
+.speaker_button {
+  position: absolute;
+  background-image: url("./speaker.png");
+  width: 20px;
+  height: 30px;
 }
