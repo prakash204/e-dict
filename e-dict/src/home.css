@@ -129,23 +129,23 @@
 .watermark {
     position: fixed;
     bottom: 1rem;
-    right: 1rem;
+    left: 1rem;
     opacity: var(--watermarkOpacity, 0.3);
     --watermarkOpacity: 0.8;
     transition: var(--watermarkTransition, 0) ease-out;
     --watermarkTransition: 0.3s;
     background-color: rgb(255 255 255 / 49%);
-    opacity: 0.5;
+    opacity: 1.0;
     display: block;
     flex-wrap: wrap;
 }
 
 .watermark img{
-  width: 3rem;
-  height: 3rem;
+  width: 10rem;
+  height: 10rem;
 }
 .watermark span{
-  color: rgb(2, 0, 131);
+  color: rgb(0, 0, 0);
   font-family: monospace;
   font-size: smaller;
 }

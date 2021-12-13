@@ -331,8 +331,8 @@ class Home extends Component {
                 }
 
                 <div class="watermark">
-                    <span>Done by ________</span> <br/>
                     <img src={logo} alt="nitk logo"/>
+                    <span>Developed by Praneeth & Shashi Prakash,IT Dept., NITK</span>
                 </div>
 
             </div>
