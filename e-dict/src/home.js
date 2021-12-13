@@ -5,8 +5,12 @@ import W from './words.json';
 import './home.css';
 import {FaSearch} from 'react-icons/fa';
 import logo from './NITK_LOGO.svg';
+import Speechinput from './speechinput.js';
 
 const Words = W.Words; 
+
+var recognition = new window.webkitSpeechRecognition();
+var final_transcript = '';
 
 class Home extends Component {
 
@@ -14,6 +18,8 @@ class Home extends Component {
         super(props);
         this.state = {
             input: "",
+            speech_input: false,
+            is_listening :null,
             audio : null,
             audio_is_playing : null,
             audio_path:"",
@@ -75,12 +81,17 @@ class Home extends Component {
         this.resettextbox= this.resettextbox.bind(this);
         this.playpauseaudio= this.playpauseaudio.bind(this);
         this.stopaudio= this.stopaudio.bind(this);
+        this.startButton = this.startButton.bind(this);
         //this.handleChange = this.handleChange.bind(this);
         //hdhjthis.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        this.setState({"input":"","want_keyboard":false,"found":false,"audio_is_playing":false});
+        this.setState({"input":"","want_keyboard":false,"found":false,"audio_is_playing":false,"is_listening":false});
+        recognition.lang='ta-IN';
+        recognition.continuous =true;
+        recognition.interimResults=true;
+        final_transcript = '';
     }
 
     onChange = word => {
@@ -144,6 +155,7 @@ class Home extends Component {
 
     resettextbox() {
         this.setState({"input":"","audio_path":"","sentences":[],"word_found":null});
+        final_transcript = '';
     }
 
     togglevirtualkeyboard(){
@@ -200,7 +212,46 @@ class Home extends Component {
         )
     }
 
+
+
+    startButton() {
+        const is_listening = this.state.is_listening;
+        this.setState({'is_listening':!is_listening,'speech_input':true});
+        if (is_listening ===  true) {
+            recognition.stop();
+            console.log(final_transcript);
+            this.setState({'input':final_transcript});
+            final_transcript = '';
+            return;
+        }
+        recognition.start();
+    }
+
     render() {
+        recognition.onresult = function(event) {
+            if (typeof(event.results) == 'undefined') {
+                recognition.onend = null;
+                recognition.stop();
+                return;
+            }
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    final_transcript += event.results[i][0].transcript;
+                }
+            }
+            var length = final_transcript.length;
+            if (length>0) {
+                let temp = final_transcript.split("");
+                let l = temp.length;
+                if (temp[l-1] === '.') {
+                    temp[l-1] = '';
+                    final_transcript = temp.toString();
+                    for (let i=0;i< l;i++) {
+                        final_transcript = final_transcript.replace(',','');
+                    }
+                }
+            }
+        };
         return(
             <div class="container">
                 <header>
@@ -209,34 +260,35 @@ class Home extends Component {
                 <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
                 
                 { this.state.input !== ""  ? <h1>{this.state.input}</h1> : <h1 style={{color:"white"}}>_</h1> }
+                
                 {this.state.want_keyboard === true ? 
                 <div>
                     <div class="search-box">
-                    <input
-                        class = "search-txt2"
-                        value={this.state.input}
-                        placeholder={"Tap on the virtual keyboard to start"}
-                        onChange={this.onChangeInput}
-                    />
+                        <input
+                            class = "search-txt2"
+                            value={this.state.input}
+                            placeholder={"Tap on the virtual keyboard to start"}
+                            onChange={this.onChangeInput}
+                        />
                         <button type="button" class="search-btn" onClick={this.searchword}>
-                                <FaSearch/>
+                            <FaSearch/>
                         </button>
                     </div>
-                    <Keyboard
-                        keyboardRef={r => (this.keyboard = r)}
-                        layout={this.state.layout}
-                        layoutName={this.state.layoutName}
-                        display={this.state.display}
-                        onChange={this.onChange}
-                        disableButtonHold = "false"
-                        onKeyPress={this.onKeyPress}
-                    />
+                        <Keyboard
+                            keyboardRef={r => (this.keyboard = r)}
+                            layout={this.state.layout}
+                            layoutName={this.state.layoutName}
+                            display={this.state.display}
+                            onChange={this.onChange}
+                            disableButtonHold = "false"
+                            onKeyPress={this.onKeyPress}
+                        />
                         <div class="wrap">
                             <a class="button" type="button"  onClick={this.togglevirtualkeyboard}>Close Keyboard</a>
                         </div>
-                    </div>
+                </div>
 
-                    : <>
+                :   <>
                         <div class="search-box">
                             <form onSubmit={this.searchword} action='#'>
                                 <input class="search-txt" type="text" placeholder="Enter a word" value={this.state.input} onChange={this.onChangeInput}></input>
@@ -244,20 +296,22 @@ class Home extends Component {
                             <button type="button" class="search-btn" onClick={this.searchword}>
                                 <FaSearch/>
                             </button>
+                            <button type="button" onClick={this.startButton}> {this.state.is_listening === true ? "Click to Stop" : "click to Speak"} </button>
+
                         </div>
                         <div class="wrap">
                             <a class="button" type="button"  onClick={this.togglevirtualkeyboard}>View Keyboard</a>
                         </div>
-                        </>
-                    }
+                    </>
+                }
                 <br></br>
                 <div>
-                <div class="wrap">
-                <a class="button" type="button"  onClick={this.searchword}>Search</a>
-                </div>
-                <div class="wrap">
-                    <a class="button" type="button"  onClick={this.resettextbox}>Reset</a>
-                </div>
+                    <div class="wrap">
+                        <a class="button" type="button"  onClick={this.searchword}>Search</a>
+                    </div>
+                    <div class="wrap">
+                        <a class="button" type="button"  onClick={this.resettextbox}>Reset</a>
+                    </div>
                 </div>
                 {this.state.word_found === true ? this.displaySentences() 
                 : this.state.word_found===null?" "
