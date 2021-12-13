@@ -132,6 +132,7 @@
     background-color: rgb(255 255 255 / 49%);
     display:block;
     flex-wrap: wrap;
+    z-index: -1;
 }
 
 .watermark img{
@@ -146,6 +147,7 @@
 }
 .sentence{
   color: darkslateblue;
+  display: flex;
   margin: 1%;
 }
 
@@ -164,7 +166,7 @@
   width: 40%;
 }
 .image-div img{
-  width: inherit;
+  width: fit-content;
 }
 
 .logo {
@@ -240,4 +242,123 @@ header {
   background-image: url("./speaker.png");
   width: 20px;
   height: 30px;
+}
+
+.btn {
+	border: none;
+  padding: 0;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  font-size: 3em;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  background: red;
+	position: relative;
+	z-index: 999;
+  display: inline-block;
+    line-height: 100px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+}
+
+.btn2 {
+	border: none;
+  padding: 0;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  font-size: 3em;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  background: #189BFF;
+	position: relative;
+	z-index: 999;
+  display: inline-block;
+    line-height: 100px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+}
+
+.pulse-ring {
+  content: '';
+  width: 30px;
+  height: 30px;
+	background: #189BFF;
+  border: 5px solid #189BFF;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  animation: pulsate infinite 1.5s;
+}
+
+.pulse-ring.delay{
+  animation-delay: 1s;
+}
+
+@keyframes pulsate {
+  0% {
+    -webkit-transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1.3, 1.3);
+    opacity: 0;
+  }
+}
+
+.container-mic {
+	display: flex;
+  align-items: center;
+  margin-left: 3px;
+  justify-content: center;
+	background-color: transparent;
+}
+
+.m-left{
+	margin-left: 30px * 3;
+}
+
+.type2{
+	background: #189BFF;
+}
+
+.type2 .pulse-ring{
+	background: transparent;
+}
+
+.btn svg{
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 0.4em;
+  height: 0.4em;
+}
+.btn2 svg{
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 0.4em;
+  height: 0.4em;
 }

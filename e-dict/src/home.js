@@ -6,6 +6,8 @@ import './home.css';
 import {FaSearch} from 'react-icons/fa';
 import logo from './NITK_LOGO.svg';
 import Speechinput from './speechinput.js';
+import { FaMicrophoneAlt } from 'react-icons/fa'
+import { FaVolumeUp } from 'react-icons/fa'
 
 
 const Words = W.Words; 
@@ -186,6 +188,14 @@ class Home extends Component {
         this.state.audio.load();
         this.setState({"audio_is_playing":false});
     }
+    inputtexttospeech() {
+        window.responsiveVoice.speak(this.state.input, "Tamil Female", { pitch: 0.95, volume: 25, rate: 0.65 });
+    }
+
+    texttospeech(event) {
+        let message = event.target.id;
+        window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1, volume: 25, rate: 0.65 });
+    }
 
     displaySentences() {
         const sentences = this.state.sentences;
@@ -197,9 +207,12 @@ class Home extends Component {
                     {sentences.map((item) => (
                         <div class="sentence">
                             {item}
-                            <button type="button" id={item} onClick={(event) => this.texttospeech(event)}>
-                                <img src="./image/speaker.png" alt="speake"/>
-                            </button>
+                            <div class="container-mic">
+                                <button id="speech" class="btn2" type="button" onClick={(event) => this.texttospeech(event)}>
+                                    <div id='mic'></div>
+                                    <FaVolumeUp />
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -222,6 +235,13 @@ class Home extends Component {
 
 
     startButton() {
+        var element = document.getElementById("mic");
+        if (element.classList.length == 0) {
+            element.classList.add("pulse-ring");
+        }
+        else {
+            element.classList.remove("pulse-ring");
+        }
         const is_listening = this.state.is_listening;
         this.setState({'is_listening':!is_listening,'speech_input':true});
         if (is_listening ===  true) {
@@ -231,17 +251,11 @@ class Home extends Component {
             final_transcript = '';
             return;
         }
+        this.resettextbox();
         recognition.start();
     }
 
-    inputtexttospeech() {
-        window.responsiveVoice.speak(this.state.input, "Tamil Female", {pitch: 0.95, volume:25,rate:0.65});
-    }
-
-    texttospeech(event) {
-        let message = event.target.id;
-        window.responsiveVoice.speak(message, "Tamil Female", {pitch: 1, volume:25,rate:0.65});
-    }
+    
 
     render() {
         recognition.onresult = function(event) {
@@ -274,11 +288,18 @@ class Home extends Component {
                     <h1 class="logo">E- Dict</h1>
                 </header>
                 <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                <script src="https://code.responsivevoice.org/responsivevoice.js?key=dNk2mo6M"></script>
                 
                 { this.state.input !== ""  ? 
-                    <div>
+                    <div style={{display:"inline-flex"}}>
                         <h1>{this.state.input}</h1>
-                        <button type="button" onClick={this.inputtexttospeech}> Click to hear</button>
+                        <div class="container-mic">
+                            <button id="speech" class="btn2" type="button" onClick={this.inputtexttospeech}>
+                                <div id='mic'></div>
+                                <FaVolumeUp />
+                            </button>
+                        </div>
                     </div> : <h1 style={{color:"white"}}>_</h1> }
                 
                 {this.state.want_keyboard === true ? 
@@ -316,7 +337,14 @@ class Home extends Component {
                             <button type="button" class="search-btn" onClick={this.searchword}>
                                 <FaSearch/>
                             </button>
-                            <button type="button" onClick={this.startButton}> {this.state.is_listening === true ? "Click to Stop" : "click to Speak"} </button>
+
+                            <div class="container-mic">
+                                <button id="speech" class="btn" type="button" onClick={this.startButton}>
+                                    <div id='mic'></div>
+                                    <FaMicrophoneAlt />
+                                </button>
+                            </div>
+
 
                         </div>
                         <div class="wrap">
@@ -349,8 +377,6 @@ class Home extends Component {
                         </div>
                         </>
                 }
-
-                <button type="button" onClick={this.texttospeech}>Loud</button>
                 
                 <div class="watermark">
                     <img src={logo} alt="nitk logo"/>
