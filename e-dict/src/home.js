@@ -412,7 +412,7 @@ class Home extends Component {
                 
                 <div class="watermark">
                     <img src={logo} alt="nitk logo"/>
-                    <span>Developed by Praneeth & Shashi Prakash,IT Dept., NITK</span>
+                    <span>Developed by IT Department, NITK</span>
                 </div>
 
             </div>
