@@ -317,7 +317,7 @@ class Home extends Component {
         return(
             <div class="container">
                 <header>
-                    <h1 class="logo">E- Dict</h1>
+                    <h1 class="logo">Tamil E- Dict</h1>
                 </header>
                 <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
