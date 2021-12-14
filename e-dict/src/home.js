@@ -193,11 +193,39 @@ class Home extends Component {
     }
 
     texttospeech(event) {
-        console.log(event)
-        let message = event.target.id;
-        console.log(message)
+        var message,ele;
+        if(event.target.localName == "path"){
+            ele = event.target.parentElement.parentElement.children[0];
+            if(ele.classList.length==0){
+                ele.classList.add("pulse-ring");
+            }else{
+                ele.classList.remove("pulse-ring");
+            }
+            message = event.target.parentElement.parentElement.parentElement.parentElement.children[0].innerHTML;
+        }
+        else if (event.target.localName == "svg"){
+            ele = event.target.parentElement.children[0];
+            if (ele.classList.length == 0) {
+                ele.classList.add("pulse-ring");
+            } else {
+                ele.classList.remove("pulse-ring");
+            }
+            message = event.target.parentElement.parentElement.parentElement.children[0].innerHTML;
+        }
+        else{
+            ele = event.target.children[0];
+            if (ele.classList.length == 0) {
+                ele.classList.add("pulse-ring");
+            } else {
+                ele.classList.remove("pulse-ring");
+            }
+            message = event.target.parentElement.parentElement.children[0].innerHTML;
+        }
         //message = "hohoho"
-        window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1, volume: 25, rate: 0.65 });
+        window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1, volume: 25, rate: 0.65,onend: function(){
+            ele.classList.remove("pulse-ring");
+        } });
+        console.log(message)
     }
 
     displaySentences() {
@@ -209,12 +237,13 @@ class Home extends Component {
                 <div class="sentence-div">
                     {sentences.map((item) => (
                         <div class="sentence">
-                            {item}
+                            <span>{item}</span>
                             <div class="container-mic">
-                                <button id={item} className="btn2" type="button" onClick={(event) => this.texttospeech(event)}>
+                                <button className="btn2" type="button" onClick={(event) => this.texttospeech(event)}>
+                                    <div></div>
+                                    <FaVolumeUp />
                                 </button>
-                                <div className='mic'></div>
-                                <FaVolumeUp />
+                                
                             </div>
                         </div>
                     ))}

@@ -361,4 +361,5 @@ header {
   left: 5px;
   width: 0.4em;
   height: 0.4em;
+  z-index: 2;
 }
