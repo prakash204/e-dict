@@ -193,7 +193,10 @@ class Home extends Component {
     }
 
     texttospeech(event) {
+        console.log(event)
         let message = event.target.id;
+        console.log(message)
+        //message = "hohoho"
         window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1, volume: 25, rate: 0.65 });
     }
 
@@ -208,10 +211,10 @@ class Home extends Component {
                         <div class="sentence">
                             {item}
                             <div class="container-mic">
-                                <button id="speech" class="btn2" type="button" onClick={(event) => this.texttospeech(event)}>
-                                    <div id='mic'></div>
-                                    <FaVolumeUp />
+                                <button id={item} className="btn2" type="button" onClick={(event) => this.texttospeech(event)}>
                                 </button>
+                                <div className='mic'></div>
+                                <FaVolumeUp />
                             </div>
                         </div>
                     ))}
