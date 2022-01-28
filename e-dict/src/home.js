@@ -69,14 +69,14 @@ class Home extends Component {
                     "` 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
                     /* sanskrit row */
                     /*     ஸ      ஷ        ஜ      ஹ           ஶ்ரீ                       க்ஷ                       */
-                    "{tab} \u0bb8 \u0bb7 \u0b9c \u0bb9 \u0bb6 \u0bcd \u0bb0 \u0bc0 \u0b95 \u0bcd \u0bb7 [ ] { }",
+                    "{tab} \u0bb8 \u0bb7 \u0b9c \u0bb9 \u0b95\u0bcd\u0bb7 \u0bb8\u0bcd\u0bb0\u0bc0  [ ] { }",
                     /* ௹     ௺    ௸     ஃ  \u0020 \u0020 \u0020 \" : ; \' {enter} */
                     "\u0bf9 \u0bfa \u0bf8 \u0b83 \" : ; ' {enter}",
                     /* ௳ ௴ ௵ ௶ ௷ */
                     "{shift} \u0bf3 \u0bf4 \u0bf5 \u0bf6 \u0bf7 / {shift}",
                     "{accept} {alt} {space} {alt} {cancel}"
                 ]
-            }
+            } //\u0bb8 \u0bcd \u0bb0 \u0bc0
         }
         this.searchword= this.searchword.bind(this);
         this.togglevirtualkeyboard= this.togglevirtualkeyboard.bind(this);
@@ -189,7 +189,7 @@ class Home extends Component {
         this.setState({"audio_is_playing":false});
     }
     inputtexttospeech() {
-        window.responsiveVoice.speak(this.state.input, "Tamil Female", { pitch: 0.95, volume: 25, rate: 0.65 });
+        window.responsiveVoice.speak(this.state.input, "Tamil Female", { pitch: 1, volume: 100, rate: 0.65 });
     }
 
     texttospeech(event) {
@@ -222,7 +222,7 @@ class Home extends Component {
             message = event.target.parentElement.parentElement.children[0].innerHTML;
         }
         //message = "hohoho"
-        window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1, volume: 25, rate: 0.65,onend: function(){
+        window.responsiveVoice.speak(message, "Tamil Female", { pitch: 1.05, volume: 50, rate: 0.68,onend: function(){
             ele.classList.remove("pulse-ring");
         } });
         console.log(message)
